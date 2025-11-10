@@ -22,7 +22,7 @@ This is because 2.2 has stutters on FPS values that aren't factors or multiples 
 
 Disable TPS Bypass/Draw Divide when using this mod, because they're pointless.
 
-The mod comes with its own version of Physics Bypass in the mod options (on Windows/Linux). Be warned that not all lists or leaderboards that allow CBF will consider this legit!
+The mod comes with its own version of Physics Bypass in the mod options (on Windows/Linux/FreeBSD). Be warned that not all lists or leaderboards that allow CBF will consider this legit!
 
 # Troubleshooting
 
