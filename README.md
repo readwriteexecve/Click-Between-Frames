@@ -26,9 +26,9 @@ The mod comes with its own version of Physics Bypass in the mod options (on Wind
 
 # Troubleshooting
 
-<details>
-
 On some operating systems, your user account may not be able to read inputs due to permission issues. This is often a simple fix, though it does require the command line and root privileges.
+
+<details>
 
 <summary>Linux</summary>
 
