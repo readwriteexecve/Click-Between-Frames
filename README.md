@@ -24,7 +24,59 @@ Disable TPS Bypass/Draw Divide when using this mod, because they're pointless.
 
 The mod comes with its own version of Physics Bypass in the mod options (on Windows/Linux). Be warned that not all lists or leaderboards that allow CBF will consider this legit!
 
-If on Linux, and the mod doesn't work, please try running the command <cr>sudo usermod -aG input $USER</c> (this will make your system slightly less secure).
+# Troubleshooting
+
+<details>
+
+On some operating systems, your user account may not be able to read inputs due to permission issues. This is often a simple fix, though it does require the command line and root privileges.
+
+<summary>Linux</summary>
+
+Run `sudo usermod -aG input $USER`, then log out and log back in.
+
+Usually, that will be enough. If not, you'll need to create a udev rule.
+Add the following to /etc/udev/rules.d/input.rules...
+
+```
+SUBSYSTEM=="input", MODE="660", OWNER="root", GROUP="input"
+KERNEL=="event[0-9]*", SUBSYSTEM=="input", TAG+="uaccess"
+```
+
+...then run the following commands...
+
+```
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
+...then it should work!
+
+</details>
+
+<details>
+
+<summary>FreeBSD</summary>
+
+Add the following to /etc/devfs.rules...
+
+```
+[evdev=10]
+add path 'input/event*' mode 0660 group input
+add path 'input/js*' mode 0660 group input
+```
+
+...then run the following commands...
+
+```
+sudo pw groupadd input
+sudo pw groupmod input -m $USER
+sudo sysrc devfs_system_ruleset+="evdev"
+sudo service devfs restart
+```
+
+...then log out and log back in.
+
+</details>
 
 # Known issues
 

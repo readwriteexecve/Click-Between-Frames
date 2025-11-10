@@ -250,8 +250,10 @@ void windowsSetup() {
 		std::string sys = sysname;
 		log::info("Wine {}", sys);
 
-		if (sys == "Linux") Mod::get()->setSavedValue<bool>("you-must-be-on-linux-to-change-this", true);
-		if (sys == "Linux" && Mod::get()->getSettingValue<bool>("wine-workaround")) { // background raw keyboard input doesn't work in Wine
+		const bool isLinux = sys == "Linux" || sys == "FreeBSD"; // FreeBSD isn't actually Linux but the listener code is the same
+
+		if (isLinux) Mod::get()->setSavedValue<bool>("you-must-be-on-linux-to-change-this", true);
+		if (isLinux && Mod::get()->getSettingValue<bool>("wine-workaround")) { // background raw keyboard input doesn't work in Wine
 			linuxNative = true;
 			log::info("Linux native");
 
@@ -294,7 +296,11 @@ void windowsSetup() {
 			si.cb = sizeof(si);
 			ZeroMemory(&pi, sizeof(pi));
 
-			std::string path = CCFileUtils::get()->fullPathForFilename("linux-input.so"_spr, true);
+			const char* inputlib = "linux-input.so"_spr;
+			// Load a different binary on FreeBSD which uses their reimplementations of epoll and inotify based on kqueue
+			if (sys == "FreeBSD") inputlib = "freebsd-input.so"_spr;
+
+			std::string path = CCFileUtils::get()->fullPathForFilename(inputlib, true);
 
 			if (!CreateProcess(path.c_str(), NULL, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
 				log::error("Failed to launch Linux input program: {}", GetLastError());
